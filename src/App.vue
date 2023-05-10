@@ -1,14 +1,14 @@
 <script>
 import axios from 'axios';
 import {store} from './store';
-import Header from './components/Header.vue';
-import Main from './components/Main.vue';
+import HeaderVue from './components/HeaderVue.vue';
+import MainVue from './components/MainVue.vue';
 
 export default{
   name: "App",
   components: {
-    Header,
-    Main
+    HeaderVue,
+    MainVue
   },
   data(){
     return{
@@ -22,33 +22,31 @@ export default{
   },
   computed:{
     apiCall(){
-      
-      const mainUrl = 'https://api.themoviedb.org/3';
-      const sectionUrl = ['/search/movie', '/search/tv'];
-      let genreSelected = this.store.currentGenre;
+      const firstPath = 'https://api.themoviedb.org/3';
+      const varPath = ['/search/movie', '/search/tv'];
       const apiKey = 'c2e7bdd41f5911ee82d8b5f96dad5dc6';
 
-      sectionUrl.forEach((el) => {
-        const completeUrl = mainUrl + el;
-        axios.get(completeUrl, {
+      varPath.forEach((elem) => {
+        const completePath = firstPath + elem;
+        axios.get(completePath, {
           params: {
             api_key: apiKey,
             language: 'en-US',
-            query: this.store.filmQuery,
+            query: this.store.searchQuery,
             }
             })
           .then((res)=>{
-            if(el === '/search/movie'){
-              this.store.onlyFilmList = res.data.results;
-              console.log('only films:', this.store.onlyFilmList);
-            } else if (el === '/search/tv'){
-              this.store.onlyTvList = res.data.results;
-              console.log('only tv:', this.store.onlyTvList);
+            if(elem === '/search/movie'){
+              this.store.filmList = res.data.results;
+              console.log('only films:', this.store.filmList);
+            } else if (elem === '/search/tv'){
+              this.store.tvList = res.data.results;
+              console.log('only tv:', this.store.tvList);
             }
           })
-        
       })
-    }
+    },
+
   },
   methods: {
    
@@ -60,21 +58,26 @@ export default{
 </script>
 
 <template>
-  
-  <Header @nomeEmit="apiCall"/> 
-  <Main class="main"/>
-
+  <div id="webapp">
+    <header>
+      <HeaderVue @nomeEmit="apiCall"/> 
+    </header>
+    <main>
+      <MainVue />
+    </main>
+  </div>
 </template>
 
 <style lang="scss">
 @use "./style/main.scss" as *;
-body{
+#webapp{
   height: 100vh;
   overflow: hidden;
-  .main{
-    background-color: aqua;
+  main{
+    background-color: rgb(20, 19, 19);
     height: 90vh;
-}
+    overflow-y: auto;
+  }
 }
 
 *{

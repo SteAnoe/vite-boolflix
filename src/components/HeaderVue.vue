@@ -1,7 +1,7 @@
 <script>
 import {store} from '../store';
 export default{
-  name: "Header",
+  name: "HeaderVue",
   data(){
     return{
       store
@@ -17,7 +17,7 @@ export default{
         <img src="https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.svg" alt="">
       </div>
       <div class="input me-5" @keyup.enter="$emit(nomeEmit)">
-        <input type="text" v-model="store.filmQuery">
+        <input type="text" v-model="store.searchQuery">
       </div>
     </nav>
   </header>

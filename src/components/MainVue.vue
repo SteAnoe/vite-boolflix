@@ -3,7 +3,7 @@ import SingleCard from './SingleCard.vue'
 import {store} from '../store';
 
 export default{
-  name: "Main",
+  name: "MainVue",
   components:{
     SingleCard
   },
@@ -16,11 +16,14 @@ export default{
 </script>
 
 <template>
-<div class="row">
+<div class="container row">
     <SingleCard/>
 </div>
 </template>
 
 <style lang="scss" scoped>
-
+div{
+  margin: 0 auto;
+  
+}
 </style>
