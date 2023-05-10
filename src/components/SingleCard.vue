@@ -37,14 +37,21 @@ export default{
       } else {
         return elem.original_language.toUpperCase()
       }
+    },
+    findImg(elem){
+      if(elem.poster_path == null){
+        return 'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'
+      } else {
+        return `https://image.tmdb.org/t/p/w342${elem.poster_path}`
+      }
     }
   }
 }
 </script>
 
 <template>
-<div class="card col-lg-3 col-md-6 col-12 bg-black my-3" v-for="(elem,index) in store.filmList" :key="index">
-  <img :src="`https://image.tmdb.org/t/p/w342${elem.poster_path}`" alt="" class="img-poster align-self-center">
+<div class="card col-lg-3 col-md-6 col-12 bg-black my-3 g-lg-1 g-md-1 g-1" v-for="(elem,index) in store.filmList" :key="index">
+  <img :src="`${findImg(elem)}`" alt="" class="img-poster align-self-center">
   <div class="align-self-center">
     <div>{{ elem.title }}</div>
     <div>{{ elem.original_title }}</div>
@@ -53,11 +60,9 @@ export default{
       <span v-for="elem in Math.ceil(starsCounter(elem))" class="fa-solid fa-star" style="color: #fbff00;"></span>
     </div>
   </div>
-  
 </div>
 <div class="card col-lg-3 col-md-6 col-12 bg-black my-3" v-for="(elem,index) in store.tvList" :key="index">
-  <img :src="`https://image.tmdb.org/t/p/w342${elem.poster_path}`" alt="" class="img-poster align-self-center">
-  <img :src="`https://www.countryflagicons.com/FLAT/64/${findFlag(elem)}.png`" alt="" style="width: 50px;">
+  <img :src="`${findImg(elem)}`" alt="" class="img-poster align-self-center">
   <div class="align-self-center">
     <div>{{ elem.name }}</div>
     <div>{{ elem.original_name }}</div>
@@ -75,7 +80,9 @@ export default{
   padding: 0;
   color: white;
   border: 1px solid red;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .img-poster{
     width: 50%;
   }
