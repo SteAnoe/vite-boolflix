@@ -8,20 +8,8 @@ export default{
     }
   },
   methods: {
-    starsCounter(e){
-      if (e.vote_average == '' || e.vote_average == 0){
-          return e.vote_average
-      } else if(e.vote_average < 2 && e.vote_average >= 1){
-          return e.vote_average
-      } else if(e.vote_average < 3 && e.vote_average >= 2){
-          return e.vote_average
-      } else if(e.vote_average < 4 && e.vote_average >= 3){
-          return e.vote_average
-      } else if(e.vote_average < 5 && e.vote_average >= 4){
-          return e.vote_average
-      } else{
-          return "5"
-      }
+    getStars(elem){
+      return Math.ceil(elem.vote_average / 2)
     },
     findFlag(elem){
       if(elem.original_language.toLowerCase() == "en"){
@@ -44,32 +32,43 @@ export default{
       } else {
         return `https://image.tmdb.org/t/p/w342${elem.poster_path}`
       }
-    }
+    },
+    showOverview(){ 
+      if(store.displayOverview == false){
+        return store.displayOverview = true
+      } else {
+        return store.displayOverview = false
+      }
+    } 
   }
 }
 </script>
 
 <template>
-<div class="card col-lg-3 col-md-6 col-12 bg-black my-3 g-lg-1 g-md-1 g-1" v-for="(elem,index) in store.filmList" :key="index">
-  <img :src="`${findImg(elem)}`" alt="" class="img-poster align-self-center">
-  <div class="align-self-center">
-    <div>{{ elem.title }}</div>
-    <div>{{ elem.original_title }}</div>
-    <img :src="`https://www.countryflagicons.com/FLAT/64/${findFlag(elem)}.png`" alt="" style="width: 50px;">
-    <div class="d-flex align-items-center">
-      <span v-for="elem in Math.ceil(starsCounter(elem))" class="fa-solid fa-star" style="color: #fbff00;"></span>
+<div class="card col-lg-3 col-md-6 col-12 bg-black my-3" v-for="(elem,index) in store.filmList" :key="index">
+  <img :src="`${findImg(elem)}`" alt="" class="img-poster">
+  <div class="info">
+    <h4 class="title" v-if="!store.displayOverview">{{ elem.title }}</h4>
+    <h6 class="og-title" v-if="!store.displayOverview">{{ elem.original_title }}</h6>
+    <img class="mt-3" :src="`https://www.countryflagicons.com/FLAT/64/${findFlag(elem)}.png`" alt="" style="width: 50px;" v-if="!store.displayOverview">
+    <div class="d-flex mt-1" v-if="!store.displayOverview">
+      <i v-for="n in 5" class="fa-star" :class="(n <= getStars(elem)) ? 'fa-solid' : 'fa-regular'"></i>
     </div>
+    <h6 class="d-overview" @click="showOverview()">Overview</h6>
+    <h6 class="overview" v-if="store.displayOverview">{{ elem.overview }}</h6>
   </div>
 </div>
 <div class="card col-lg-3 col-md-6 col-12 bg-black my-3" v-for="(elem,index) in store.tvList" :key="index">
-  <img :src="`${findImg(elem)}`" alt="" class="img-poster align-self-center">
-  <div class="align-self-center">
-    <div>{{ elem.name }}</div>
-    <div>{{ elem.original_name }}</div>
-    <img :src="`https://www.countryflagicons.com/FLAT/64/${findFlag(elem)}.png`" alt="" style="width: 50px;">
-    <div class="d-flex align-items-center">
-      <span v-for="elem in Math.ceil(starsCounter(elem))" class="fa-solid fa-star" style="color: #fbff00;"></span>
+  <img :src="`${findImg(elem)}`" alt="" class="img-poster">
+  <div class="info">
+    <h4 class="title" v-if="!store.displayOverview">{{ elem.name }}</h4>
+    <h6 class="og-title" v-if="!store.displayOverview">{{ elem.original_name }}</h6>
+    <img class="mt-3" :src="`https://www.countryflagicons.com/FLAT/64/${findFlag(elem)}.png`" alt="" style="width: 50px;" v-if="!store.displayOverview">
+    <div class="d-flex mt-1" v-if="!store.displayOverview">
+      <i v-for="n in 5" class="fa-star" :class="(n <= getStars(elem)) ? 'fa-solid' : 'fa-regular'"></i>
     </div>
+    <h6 class="d-overview" @click="showOverview()">Overview</h6>
+    <h6 class="overview" v-if="store.displayOverview">{{ elem.overview }}</h6>
   </div>
   
 </div>
@@ -79,12 +78,48 @@ export default{
 .card{
   padding: 0;
   color: white;
-  border: 1px solid red;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  &:hover .info{
+    filter: opacity(1);
+  }
+  &:hover .img-poster{
+      filter: opacity(0.1);
+    }
   .img-poster{
-    width: 50%;
+    width: 100%;
+  }
+  .info{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    filter: opacity(0);
+    i{
+      color: yellow;
+   
+    }
+    .title{
+      font-size: 15px;
+    }
+    .og-title{
+      font-size: 10px;
+    }
+    .d-overview{
+      cursor: pointer;
+      margin-top: 20px;
+      &:hover .overview{
+        filter: opacity(1);
+      }
+      
+    }
+    .overview{
+        font-size: 11px;
+      }
   }
 }
 </style>
